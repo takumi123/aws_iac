@@ -43,11 +43,12 @@ export class CdkStack extends cdk.Stack {
     // GitHub Actions用のIAMロール
     const githubActionsRole = new iam.Role(this, 'GitHubActionsRole', {
       assumedBy: new iam.WebIdentityPrincipal('token.actions.githubusercontent.com', {
-        StringLike: {
-          'token.actions.githubusercontent.com:sub': 'repo:takumi123/aws_iac:*'
-        },
         StringEquals: {
           'token.actions.githubusercontent.com:aud': 'sts.amazonaws.com'
+        }
+      }).withConditions({
+        StringLike: {
+          'token.actions.githubusercontent.com:sub': 'repo:takumi123/aws_iac:*'
         }
       }),
       description: 'Role for GitHub Actions',
